@@ -1,6 +1,6 @@
 - 🔭 I’m currently working on music and personal website projects
 - 🌱 I’m currently learning Java, Svelte, Lua, and more!
-- 📫 How to reach me: [noahcroghan.com](noahcroghan.com)
+- 📫 How to reach me: [noahcroghan.com](https://noahcroghan.com/)
 - 😄 Pronouns: he/him
 
 <!-- - 👯 I’m looking to collaborate on ... -->
