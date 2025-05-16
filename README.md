@@ -1,5 +1,5 @@
-- 🔭 I’m currently working on music and personal website projects
-- 🌱 I’m currently learning Java, Svelte, Lua, and more!
+- 🔭 I’m currently working on music and personal projects
+- 🌱 I’m currently learning Python and C#
 - 📫 How to reach me: [noahcroghan.com](https://noahcroghan.com/)
 - 😄 Pronouns: he/him
 
