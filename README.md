@@ -7,3 +7,5 @@
 <!-- - 🤔 I'm looking for help with ... -->
 <!-- - 💬 Ask me about ... -->
 <!-- - ⚡ Fun fact: ... -->
+
+[View some of my projects](https://github.com/noahcroghan?tab=repositories) or checkout my [LinkedIn](https://www.linkedin.com/in/noah-croghan/)!
