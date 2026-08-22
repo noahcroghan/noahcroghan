@@ -5,7 +5,7 @@
 Current software knowledge:
 - Front-end: HTML, CSS, SCSS, Razor, React, JavaScript, TypeScript
 - Back-end: C#.NET, Java, Python (Django), SQL (Microsoft SQL Server/PostgreSQL/SQLite)
-- DevOps: Docker Compose, GitHub, Azure DevOps
+- DevOps: Docker Compose, Cloudflare DNS, GitHub, Azure DevOps
 
 Want to learn:
 - Rust, C++, Astro
