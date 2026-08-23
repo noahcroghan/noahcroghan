@@ -1,6 +1,6 @@
 - 📖 Studying Software Engineering at the University of Nebraska–Lincoln
 - 💼 Working as a Software Development Intern at Sandhills Global
-- 🔭 Working on music and personal side projects
+- 🔭 Also working on music and personal coding side projects
 - 📫 How to reach me: [noahcroghan.com](https://noahcroghan.com/) or Email
 - 😄 Pronouns: he/him
 
