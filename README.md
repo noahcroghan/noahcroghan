@@ -1,4 +1,6 @@
-- 🔭 I'm currently working on music, personal projects and classwork
+- 📖 Studying Software Engineering at the University of Nebraska–Lincoln
+- 💼 Working as a Software Development Intern at Sandhills Global
+- 🔭 Working on music and personal side projects
 - 📫 How to reach me: [noahcroghan.com](https://noahcroghan.com/) or Email
 - 😄 Pronouns: he/him
 
