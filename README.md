@@ -16,4 +16,4 @@ Software Engineer
 
 ## Software Interests
 
-Web development, distributed systems, DevOps, software quality, and developer tooling.
+Web development, distributed systems, DevOps, software quality, and developer tooling
