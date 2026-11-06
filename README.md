@@ -10,11 +10,11 @@ _**Software Engineer**_
 - Contact me on [LinkedIn](https://www.linkedin.com/in/noah-croghan/)
 - Pronouns: he/him
 
-<picture>
+<!--<picture>
   <source media="(prefers-color-scheme: dark)" srcset="media/interests-dark.gif" />
   <source media="(prefers-color-scheme: light)" srcset="media/interests-light.gif" />
   <img src="media/interests-light.gif" width="269" alt="Full stack web development, distributed systems, DevOps, software quality, agentic workflows, and developer tooling" />
-</picture>
+</picture>-->
 
 ## Skills
 
