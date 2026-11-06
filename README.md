@@ -13,7 +13,7 @@ _**Software Engineer**_
 <!--<picture>
   <source media="(prefers-color-scheme: dark)" srcset="media/interests-dark.gif" />
   <source media="(prefers-color-scheme: light)" srcset="media/interests-light.gif" />
-  <img src="media/interests-light.gif" width="269" alt="Full stack web development, distributed systems, DevOps, software quality, agentic workflows, and developer tooling" />
+  <img src="media/interests-light.gif" width="228" alt="Full stack web development, distributed systems, DevOps, software quality, agentic workflows, and developer tooling" />
 </picture>-->
 
 ## Skills

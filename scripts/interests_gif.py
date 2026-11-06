@@ -1,6 +1,11 @@
 """Generate the animated "Software Interests" typing GIFs (dark + light).
 
+Styled to match GitHub's inline `code` rendering:
+  font-size 85% of 16px, padding .2em .4em, border-radius 6px,
+  background var(--bgColor-neutral-muted), color var(--fgColor-default).
+
 Usage: python scripts/interests_gif.py   (requires Pillow, macOS SF Mono)
+       gifsicle -O3 --batch media/interests-*.gif   (optional, shrinks output)
 """
 
 import random
@@ -17,15 +22,17 @@ ITEMS = [
     "Developer tooling",
 ]
 
-PROMPT = ""
 SCALE = 2  # render at 2x for crisp retina display
-FONT_SIZE = 16 * SCALE
+FONT_PX = 16 * 0.85  # GitHub: code { font-size: 85% }
+PAD_X_EM, PAD_Y_EM = 0.4, 0.2  # GitHub: code { padding: .2em .4em }
+RADIUS_PX = 6  # GitHub: code { border-radius: 6px }
+CARET_W = 3  # device px at 2x (= 1.5 CSS px)
 FONT_PATH = "/System/Library/Fonts/SFNSMono.ttf"  # GitHub's ui-monospace on macOS
 
-# GitHub Primer colors
+# GitHub Primer colors. `code` = bgColor-neutral-muted (translucent) over page bg.
 THEMES = {
-    "dark": {"bg": "#0d1117", "fg": "#f0f6fc", "prompt": "#3fb950"},
-    "light": {"bg": "#ffffff", "fg": "#1f2328", "prompt": "#1a7f37"},
+    "dark": {"page": "#0d1117", "code": ((101, 108, 118), 0.20), "fg": "#f0f6fc"},
+    "light": {"page": "#ffffff", "code": ((129, 139, 152), 0.12), "fg": "#1f2328"},
 }
 
 # Timing (ms) — GIF delays are in 10ms units
@@ -43,23 +50,22 @@ def hex_rgb(h):
     return tuple(int(h[i : i + 2], 16) for i in (0, 2, 4))
 
 
-def build_palette(theme, levels=32):
-    bg = hex_rgb(theme["bg"])
-    colors = [bg]
-    for key in ("fg", "prompt"):
-        c = hex_rgb(theme[key])
-        for i in range(1, levels + 1):
-            t = i / levels
-            colors.append(tuple(round(bg[j] + (c[j] - bg[j]) * t) for j in range(3)))
-    flat = [v for col in colors for v in col]
-    flat += [0] * (768 - len(flat))
+def mix(a, b, t):
+    return tuple(round(a[i] + (b[i] - a[i]) * t) for i in range(3))
+
+
+def build_palette(page, code, fg):
+    colors = [page]  # index 0 -> transparent
+    colors += [mix(page, code, i / 16) for i in range(1, 17)]  # rounded-corner AA
+    colors += [mix(code, fg, i / 48) for i in range(1, 49)]  # text AA
+    flat = [v for c in colors for v in c] + [0] * (768 - 3 * len(colors))
     pal = Image.new("P", (1, 1))
     pal.putpalette(flat)
     return pal
 
 
 def timeline():
-    """Yield (text, cursor_visible, duration_ms) states."""
+    """Yield (text, caret_visible, duration_ms) states."""
     rng = random.Random(7)
     for item in ITEMS:
         for i in range(1, len(item) + 1):
@@ -68,42 +74,56 @@ def timeline():
             yield item, k % 2 == 1, BLINK_MS
         for i in range(len(item) - 1, -1, -1):
             yield item[:i], True, DELETE_MS
-        yield "", True, EMPTY_MS
+        for k in range(EMPTY_MS // 200):
+            yield "", k % 2 == 1, 200
+
+
+def pill_mask(w, h, canvas_w, r):
+    """Anti-aliased rounded-rect mask via 4x supersampling."""
+    ss = 4
+    m = Image.new("L", (canvas_w * ss, h * ss), 0)
+    ImageDraw.Draw(m).rounded_rectangle([0, 0, w * ss - 1, h * ss - 1], radius=r * ss, fill=255)
+    return m.resize((canvas_w, h), Image.Resampling.BOX)
 
 
 def render(theme_name):
     theme = THEMES[theme_name]
-    font = ImageFont.truetype(FONT_PATH, FONT_SIZE)
+    page, fg = hex_rgb(theme["page"]), hex_rgb(theme["fg"])
+    code = mix(page, *theme["code"])
+
+    size = FONT_PX * SCALE
+    font = ImageFont.truetype(FONT_PATH, round(size))
     font.set_variation_by_name("Regular")
     char_w = font.getlength("M")
     ascent, descent = font.getmetrics()
-    line_h = ascent + descent
+    pad_x, pad_y = PAD_X_EM * size, PAD_Y_EM * size
+    radius = RADIUS_PX * SCALE
 
-    longest = max(len(s) for s in ITEMS)
-    pad_y = 6 * SCALE
-    width = round(char_w * (len(PROMPT) + longest + 1)) + 2 * SCALE
-    height = line_h + 2 * pad_y
-    palette = build_palette(theme)
+    def pill_w(n):
+        return round(2 * pad_x + char_w * n)
+
+    width = pill_w(max(len(s) for s in ITEMS))
+    height = round(ascent + descent + 2 * pad_y)
+    palette = build_palette(page, code, fg)
+    masks = {}
 
     frames, durations, prev = [], [], None
-    for text, cursor, ms in timeline():
-        key = (text, cursor)
-        if key == prev:  # merge identical consecutive frames
+    for text, caret, ms in timeline():
+        if (text, caret) == prev:  # merge identical consecutive frames
             durations[-1] += ms
             continue
-        prev = key
+        prev = (text, caret)
 
-        img = Image.new("RGB", (width, height), theme["bg"])
+        w = pill_w(len(text))
+        if w not in masks:
+            masks[w] = pill_mask(w, height, width, radius)
+        img = Image.composite(Image.new("RGB", (width, height), code),
+                              Image.new("RGB", (width, height), page), masks[w])
         d = ImageDraw.Draw(img)
-        d.text((0, pad_y), PROMPT, font=font, fill=theme["prompt"])
-        x = char_w * len(PROMPT)
-        d.text((x, pad_y), text, font=font, fill=theme["fg"])
-        if cursor:
-            cx = x + char_w * len(text)
-            d.rectangle(
-                [round(cx), pad_y + 2 * SCALE, round(cx + char_w) - 1, pad_y + line_h - 2 * SCALE],
-                fill=theme["fg"],
-            )
+        d.text((pad_x, pad_y), text, font=font, fill=fg)
+        if caret:
+            cx = round(pad_x + char_w * len(text))
+            d.rectangle([cx, round(pad_y), cx + CARET_W - 1, round(pad_y + ascent + descent) - 1], fill=fg)
         frames.append(img.quantize(palette=palette, dither=Image.Dither.NONE))
         durations.append(ms)
 
@@ -118,7 +138,8 @@ def render(theme_name):
         disposal=2,
         optimize=False,
     )
-    print(f"wrote {out} ({width}x{height}, {len(frames)} frames, {out.stat().st_size // 1024} KB)")
+    print(f"wrote {out} ({width}x{height} -> display width {width / SCALE:g}px, "
+          f"{len(frames)} frames, {out.stat().st_size // 1024} KB)")
 
 
 if __name__ == "__main__":
