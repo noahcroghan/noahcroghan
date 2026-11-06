@@ -1,6 +1,6 @@
-# Noah Croghan
+# Noah Croghan <img src="media/pfp.png" alt="Photo of Noah Croghan" width="160" align="right" />
 
-Software Engineer
+_**Software Engineer**_
 
 - Software Engineering student at the University of Nebraska–Lincoln
 - Software Development Intern at Sandhills Global
