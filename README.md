@@ -1,4 +1,6 @@
-# Noah Croghan <img src="media/pfp.png" alt="Photo of Noah Croghan" width="160" align="right" />
+# Noah Croghan
+
+<img src="media/pfp.png" alt="Photo of Noah Croghan" width="160" align="right" />
 
 _**Software Engineer**_
 
@@ -16,4 +18,4 @@ _**Software Engineer**_
 
 ## Software Interests
 
-Full stack web development, distributed systems, DevOps, software quality, and developer tooling
+Full stack web development, distributed systems, DevOps, software quality, agentic workflows, and developer tooling
